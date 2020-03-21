@@ -30,6 +30,7 @@ class XformUtils {
 public:
    Eigen::Affine3f transformTFToAffine3f(const tf::Transform &t);
    Eigen::Affine3d transformTFToAffine3d(const tf::Transform &t);
+   Eigen::Affine3d transformTFToAffine3dFromListener(const tf::Transform &t);
    double convertPlanarQuat2Phi(geometry_msgs::Quaternion quaternion);
    geometry_msgs::Quaternion convertPlanarPsi2Quaternion(double psi);
    tf::Transform get_tf_from_stamped_tf(tf::StampedTransform sTf);

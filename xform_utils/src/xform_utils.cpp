@@ -129,6 +129,28 @@ Eigen::Affine3d XformUtils::transformTFToAffine3d(const tf::Transform &t) {
     for (int col = 0; col < 3; col++)
         e.matrix()(3, col) = 0;
     e.matrix()(3, 3) = 1;
+    
+    return e;
+}
+
+//convert a Tf to an Affine3d; knowledge of named parent and child frames is lost
+Eigen::Affine3d XformUtils::transformTFToAffine3dFromListener(const tf::Transform &t) {
+    Eigen::Affine3d e;
+    // treat the Eigen::Affine as a 4x4 matrix:
+    for (int i = 0; i < 3; i++) {
+        e.matrix()(i, 3) = t.getOrigin()[i]; //copy the origin from tf to Eigen
+        for (int j = 0; j < 3; j++) {
+            e.matrix()(i, j) = t.getBasis()[i][j]; //and copy 3x3 rotation matrix
+        }
+    }
+    // Fill in identity in last row
+    for (int col = 0; col < 3; col++)
+        e.matrix()(3, col) = 0;
+    e.matrix()(3, 3) = 1;
+    
+    e.linear().transposeInPlace();
+    e.translation() = e.linear() * e.translation();
+    
     return e;
 }
 
